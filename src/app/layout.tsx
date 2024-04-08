@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Cairo } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Cairo({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Contact App',
@@ -11,12 +11,22 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  header,
+  footer,
 }: Readonly<{
   children: React.ReactNode
+  header: React.ReactNode
+  footer: React.ReactNode
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body
+        className={`${inter.className} m-4 flex flex-col items-center justify-center bg-secondary`}
+      >
+        {header}
+        {children}
+        {footer}
+      </body>
     </html>
   )
 }
