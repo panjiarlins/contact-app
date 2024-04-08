@@ -14,7 +14,7 @@ export default function Header() {
       </div>
 
       <div className="flex flex-row gap-4">
-        <div className="relative">
+        <div className="relative flex-1">
           <label htmlFor="search-contact" className="sr-only">
             Search
           </label>
@@ -25,7 +25,7 @@ export default function Header() {
             type="search"
             id="search-contact"
             placeholder="Search here"
-            className="size-full rounded-md border-none ps-10 shadow-sm focus:bg-background focus:ring-0 sm:text-sm"
+            className="size-full rounded-md border-none ps-10 shadow-sm focus:bg-transparent focus:ring-0 sm:text-sm"
           />
         </div>
 

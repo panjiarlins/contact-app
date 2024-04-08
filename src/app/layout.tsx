@@ -20,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.className} m-4 flex flex-col items-center justify-center bg-secondary`}
-      >
+      <body className={`${inter.className} m-4 mx-auto max-w-screen-lg`}>
         {header}
         {children}
         {footer}
