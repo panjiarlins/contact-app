@@ -25,7 +25,7 @@ export default function Header() {
             type="search"
             id="search-contact"
             placeholder="Search here"
-            className="size-full rounded-md border-none ps-10 shadow-sm focus:bg-transparent focus:ring-0 sm:text-sm"
+            className="size-full rounded-md border-none ps-10 shadow-sm focus:ring-0 sm:text-sm"
           />
         </div>
 
