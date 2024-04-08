@@ -1,9 +1,17 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { Search, UserRoundPlus } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
+  const pathname = usePathname()
+
+  if (pathname !== '/') return <></>
+
   return (
-    <header className="columns-2">
+    <header className="columns-2 px-4 pt-8">
       <div>
         <div className="flex flex-col">
           <span className="text-2xl font-bold">Contact App</span>
@@ -29,9 +37,11 @@ export default function Header() {
           />
         </div>
 
-        <Button className="space-x-1 rounded-lg shadow-sm">
-          <UserRoundPlus className="size-4" />
-          <span>New Contact</span>
+        <Button asChild className="space-x-1 rounded-lg shadow-sm">
+          <Link href="/new-contact">
+            <UserRoundPlus className="size-4" />
+            <span>New Contact</span>
+          </Link>
         </Button>
       </div>
     </header>

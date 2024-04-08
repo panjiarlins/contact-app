@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Pagination,
   PaginationContent,
@@ -7,10 +9,15 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
+import { usePathname } from 'next/navigation'
 
 export default function Footer() {
+  const pathname = usePathname()
+
+  if (pathname !== '/') return <></>
+
   return (
-    <footer className="flex flex-row justify-between">
+    <footer className="flex flex-row justify-between px-4 pb-8">
       <div>
         <span>Showing </span>
         <span className="font-bold">1-10</span>

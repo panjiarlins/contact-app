@@ -4,7 +4,7 @@ export default function RootPage() {
   const contacts = []
 
   return (
-    <main>
+    <main className="p-4">
       <section className="grid  grid-cols-1 gap-4 min-[480px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
         {contacts.length === 0 ? (
           <div className="col-span-full m-10 text-center">
