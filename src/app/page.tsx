@@ -1,7 +1,8 @@
 import ContactCard from '@/components/contact-card'
+import { type Contact } from '@/models/Contact'
 
 export default function RootPage() {
-  const contacts = []
+  const contacts: Contact[] = []
 
   return (
     <main className="p-4">
