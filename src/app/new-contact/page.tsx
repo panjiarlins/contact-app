@@ -1,5 +1,6 @@
 'use client'
 
+import { createContact } from '@/action/contact'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -19,9 +20,15 @@ import {
   Phone,
   UserRound,
 } from 'lucide-react'
+import { useAction } from 'next-safe-action/hooks'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
+
+const TOAST_ID = 'create-contact'
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -32,11 +39,9 @@ const formSchema = z.object({
   address: z.string().min(5),
 })
 
-function onSubmit(values: z.infer<typeof formSchema>) {
-  console.log(values)
-}
-
 export default function Page() {
+  const router = useRouter()
+
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
     resolver: zodResolver(formSchema),
@@ -49,6 +54,34 @@ export default function Page() {
       address: '',
     },
   })
+
+  const { execute, status } = useAction(createContact, {
+    onExecute: () => {
+      toast.loading('Creating contact...', {
+        duration: Infinity,
+        dismissible: true,
+        id: TOAST_ID,
+      })
+    },
+    onError: (error) => {
+      toast.error(
+        error.fetchError ?? error.serverError ?? 'Failed to create contact',
+        { duration: 4000, id: TOAST_ID }
+      )
+    },
+    onSuccess: () => {
+      toast.success('Contact created', { duration: 4000, id: TOAST_ID })
+      form.reset()
+      router.push('/')
+    },
+  })
+
+  const onSubmit = useCallback(
+    (values: z.infer<typeof formSchema>) => {
+      execute(values)
+    },
+    [execute]
+  )
 
   return (
     <section className="mx-auto p-8 sm:px-12 lg:px-16 lg:py-12">
@@ -201,7 +234,9 @@ export default function Page() {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={status === 'executing'}>
+            Submit
+          </Button>
         </form>
       </Form>
     </section>

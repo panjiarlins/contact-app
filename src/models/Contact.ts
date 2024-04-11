@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-export interface Contact {
+export interface ContactType {
   name: string
   email: string
   phone: string
@@ -9,7 +9,7 @@ export interface Contact {
   address: string
 }
 
-const contactShema = new mongoose.Schema<Contact>({
+const contactShema = new mongoose.Schema<ContactType>({
   name: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true },
@@ -18,5 +18,8 @@ const contactShema = new mongoose.Schema<Contact>({
   address: { type: String, required: true },
 })
 
-export default mongoose.models.Contact ??
-  mongoose.model<Contact>('Contact', contactShema)
+const Contact =
+  mongoose.models.Contact ??
+  mongoose.model<ContactType>('Contact', contactShema)
+
+export default Contact
