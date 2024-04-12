@@ -13,12 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
   header,
-  footer,
-}: Readonly<{
-  children: React.ReactNode
-  header: React.ReactNode
-  footer: React.ReactNode
-}>) {
+}: Readonly<{ children: React.ReactNode; header: React.ReactNode }>) {
   return (
     <html lang="en">
       <body
@@ -26,7 +21,6 @@ export default function RootLayout({
       >
         {header}
         {children}
-        {footer}
         <Toaster richColors closeButton position="top-center" />
       </body>
     </html>

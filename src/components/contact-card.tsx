@@ -35,7 +35,7 @@ export default function ContactCard({
             alt={`Photo of ${name}`}
             width={105}
             height={105}
-            className="rounded-3xl border"
+            className="rounded-3xl border-4 border-white"
           />
           <Image
             unoptimized
@@ -44,13 +44,13 @@ export default function ContactCard({
             alt={`Avatar of ${name}`}
             width={42}
             height={42}
-            className="absolute -right-[24px] bottom-0 mx-auto rounded-2xl"
+            className="absolute -right-[24px] bottom-0 mx-auto rounded-2xl border border-white"
           />
         </div>
       </div>
 
       <div className="text-center">
-        <div className="font-bold">Full Name</div>
+        <div className="font-bold">{name}</div>
         <div className="text-sm">
           <div className="text-primary">{relationship}</div>
         </div>

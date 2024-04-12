@@ -1,7 +1,7 @@
 'use server'
 
 import { action } from '@/lib/safe-action'
-import Contact from '@/models/Contact'
+import Contact, { type ContactType } from '@/models/Contact'
 import { z } from 'zod'
 
 const createContactSchema = z.object({
@@ -26,5 +26,29 @@ export const createContact = action(
     })
 
     // revalidateTag()
+  }
+)
+
+export const getContacts = action(
+  z.object({ page: z.number(), perPage: z.number() }),
+  async ({ page, perPage }) => {
+    const skip = (page - 1) * perPage
+    const limit = perPage
+
+    const contacts = (await Contact.find()
+      .limit(limit)
+      .skip(skip)) as ContactType[]
+
+    const totalContacts = await Contact.countDocuments()
+
+    return {
+      contacts,
+      page,
+      perPage,
+      totalPages: Math.ceil(totalContacts / perPage),
+      total: totalContacts,
+      start: skip + 1,
+      end: Math.min(skip + limit, totalContacts),
+    }
   }
 )
