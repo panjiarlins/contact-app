@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Cairo } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
+import { Suspense } from 'react'
 
 const inter = Cairo({ subsets: ['latin'] })
 
@@ -19,7 +20,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} mx-auto max-w-screen-lg bg-secondary`}
       >
-        {header}
+        <Suspense>{header}</Suspense>
         {children}
         <Toaster richColors closeButton position="top-center" />
       </body>

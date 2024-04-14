@@ -1,6 +1,3 @@
-'use client'
-
-import { useSearchParams } from 'next/navigation'
 import {
   Pagination,
   PaginationContent,
@@ -10,54 +7,29 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from './ui/pagination'
-import { useMemo } from 'react'
-
-function mergeSearchParams(...searchParamsObjects: URLSearchParams[]) {
-  const combinedParams = new URLSearchParams()
-  searchParamsObjects.forEach((params) => {
-    params.forEach((value, key) => {
-      combinedParams.set(key, value)
-    })
-  })
-  return combinedParams
-}
 
 export default function ContactCardPagination({
+  searchParams,
   page,
-  perPage,
   totalPages,
   total,
   start,
   end,
 }: {
+  searchParams: Record<string, string>
   page: number
-  perPage: number
   totalPages: number
   total: number
   start: number
   end: number
 }) {
-  const searchParams = useSearchParams()
+  const params = new URLSearchParams(searchParams)
 
-  const prevLink = useMemo(() => {
-    return (
-      '?' +
-      mergeSearchParams(
-        searchParams,
-        new URLSearchParams({ page: `${page - 1}`, perPage: `${perPage}` })
-      ).toString()
-    )
-  }, [searchParams, page, perPage])
+  params.set('page', `${page - 1}`)
+  const prevLink = '?' + params.toString()
 
-  const nextLink = useMemo(() => {
-    return (
-      '?' +
-      mergeSearchParams(
-        searchParams,
-        new URLSearchParams({ page: `${page + 1}`, perPage: `${perPage}` })
-      ).toString()
-    )
-  }, [searchParams, page, perPage])
+  params.set('page', `${page + 1}`)
+  const nextLink = '?' + params.toString()
 
   return (
     <section className="flex flex-col justify-between gap-4 px-4 pb-8 pt-6 sm:flex-row">

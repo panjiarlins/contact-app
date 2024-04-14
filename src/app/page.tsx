@@ -3,10 +3,16 @@ import ContactCard from '@/components/contact-card'
 import ContactCardPagination from '@/components/contact-card-pagination'
 
 export default async function RootPage({
-  searchParams: { page, perPage, search },
+  searchParams,
 }: {
-  searchParams: { page?: string; perPage?: string; search?: string }
+  searchParams: Record<string, string>
 }) {
+  const {
+    page,
+    perPage,
+    search,
+  }: { page?: string; perPage?: string; search?: string } = searchParams
+
   const { data } = await getContacts({
     page: Number.isNaN(Number(page)) ? 1 : Number(page),
     perPage: Number.isNaN(Number(perPage)) ? 8 : Number(perPage),
@@ -40,16 +46,7 @@ export default async function RootPage({
         )}
       </section>
 
-      {data && (
-        <ContactCardPagination
-          page={data.page}
-          perPage={data.perPage}
-          totalPages={data.totalPages}
-          total={data.total}
-          start={data.start}
-          end={data.end}
-        />
-      )}
+      {data && <ContactCardPagination searchParams={searchParams} {...data} />}
     </main>
   )
 }
