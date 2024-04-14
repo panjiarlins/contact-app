@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 export interface ContactType {
-  _id?: string
+  _id: mongoose.Types.ObjectId
   name: string
   email: string
   phone: string

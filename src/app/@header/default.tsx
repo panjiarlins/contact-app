@@ -3,15 +3,17 @@
 import { Button } from '@/components/ui/button'
 import { Search, UserRoundPlus } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 export default function Header() {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const router = useRouter()
 
   if (pathname !== '/') return <></>
 
   return (
-    <header className="columns-2 px-4 pt-8">
+    <header className="flex flex-col items-center gap-4 px-4 pt-8 sm:flex-row sm:justify-between">
       <div>
         <div className="flex flex-col">
           <span className="text-2xl font-bold">Contact App</span>
@@ -34,6 +36,13 @@ export default function Header() {
             id="search-contact"
             placeholder="Search here"
             className="size-full rounded-md border-none ps-10 shadow-sm focus:ring-0 sm:text-sm"
+            defaultValue={searchParams.get('search') ?? ''}
+            onChange={(e) => {
+              const params = new URLSearchParams(searchParams.toString())
+              params.set('search', e.target.value)
+              params.set('page', '1')
+              router.push('?' + params.toString())
+            }}
           />
         </div>
 

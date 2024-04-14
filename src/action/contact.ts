@@ -30,16 +30,35 @@ export const createContact = action(
 )
 
 export const getContacts = action(
-  z.object({ page: z.number(), perPage: z.number() }),
-  async ({ page, perPage }) => {
+  z.object({
+    page: z.number(),
+    perPage: z.number(),
+    search: z.string().optional(),
+  }),
+  async ({ page, perPage, search }) => {
+    const searchTrim = search?.trim()
+    const searchQuery = !searchTrim
+      ? {}
+      : {
+          $or: [
+            { name: { $regex: '.*' + searchTrim + '.*', $options: 'i' } },
+            { email: { $regex: '.*' + searchTrim + '.*', $options: 'i' } },
+            { phone: { $regex: '.*' + searchTrim + '.*', $options: 'i' } },
+            { imageURL: { $regex: '.*' + searchTrim + '.*', $options: 'i' } },
+            {
+              relationship: { $regex: '.*' + searchTrim + '.*', $options: 'i' },
+            },
+            { address: { $regex: '.*' + searchTrim + '.*', $options: 'i' } },
+          ],
+        }
     const skip = (page - 1) * perPage
     const limit = perPage
 
-    const contacts = (await Contact.find()
+    const contacts = (await Contact.find(searchQuery)
       .limit(limit)
       .skip(skip)) as ContactType[]
 
-    const totalContacts = await Contact.countDocuments()
+    const totalContacts = await Contact.countDocuments(searchQuery)
 
     return {
       contacts,
