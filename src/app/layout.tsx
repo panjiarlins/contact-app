@@ -17,9 +17,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode; header: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.className} mx-auto max-w-screen-lg bg-secondary`}
-      >
+      <body className={`${inter.className} bg-secondary`}>
         <Suspense>{header}</Suspense>
         {children}
         <Toaster richColors closeButton position="top-center" />

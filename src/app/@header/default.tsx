@@ -13,7 +13,7 @@ export default function Header() {
   if (pathname !== '/') return <></>
 
   return (
-    <header className="flex flex-col items-center gap-4 px-4 pt-8 sm:flex-row sm:justify-between">
+    <header className="mx-auto flex max-w-screen-lg flex-col items-center gap-4 px-4 pt-8 sm:flex-row sm:justify-between">
       <div>
         <div className="flex flex-col">
           <span className="text-2xl font-bold">Contact App</span>

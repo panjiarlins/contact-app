@@ -19,6 +19,7 @@ export default function MenuCardContact({ id }: { id: string }) {
   return (
     <>
       <DialogDeleteContact id={id} isOpen={isOpen} setIsOpen={setIsOpen} />
+
       <Menubar className="absolute right-1 top-2 z-10 border-none bg-transparent">
         <MenubarMenu>
           <MenubarTrigger className="size-10 rounded-full">
