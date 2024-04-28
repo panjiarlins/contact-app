@@ -2,19 +2,18 @@
 
 import { action } from '@/lib/safe-action'
 import Contact, { type ContactType } from '@/models/Contact'
+import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-const createContactSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email(),
-  phone: z.string().min(5),
-  imageURL: z.string().url(),
-  relationship: z.string().min(3),
-  address: z.string().min(5),
-})
-
 export const createContact = action(
-  createContactSchema,
+  z.object({
+    name: z.string().min(1),
+    email: z.string().email(),
+    phone: z.string().min(5),
+    imageURL: z.string().url(),
+    relationship: z.string().min(3),
+    address: z.string().min(5),
+  }),
   async ({ name, email, phone, imageURL, relationship, address }) => {
     await Contact.create({
       name,
@@ -25,7 +24,7 @@ export const createContact = action(
       address,
     })
 
-    // revalidateTag()
+    revalidatePath('/', 'page')
   }
 )
 
@@ -54,14 +53,14 @@ export const getContacts = action(
     const skip = (page - 1) * perPage
     const limit = perPage
 
-    const contacts = (await Contact.find(searchQuery)
+    const contacts = await Contact.find<ContactType>(searchQuery)
       .limit(limit)
-      .skip(skip)) as ContactType[]
+      .skip(skip)
 
     const totalContacts = await Contact.countDocuments(searchQuery)
 
     return {
-      contacts,
+      contacts: JSON.parse(JSON.stringify(contacts)) as typeof contacts,
       page,
       perPage,
       totalPages: Math.ceil(totalContacts / perPage),
@@ -69,5 +68,38 @@ export const getContacts = action(
       start: skip + 1,
       end: Math.min(skip + limit, totalContacts),
     }
+  }
+)
+
+export const getContactById = action(
+  z.object({ id: z.string() }),
+  async ({ id }) => {
+    const contact = await Contact.findById<ContactType>(id)
+
+    return JSON.parse(JSON.stringify(contact)) as typeof contact
+  }
+)
+
+export const editContact = action(
+  z.object({
+    id: z.string(),
+    name: z.string().min(1).optional(),
+    email: z.string().email().optional(),
+    phone: z.string().min(5).optional(),
+    imageURL: z.string().url().optional(),
+    relationship: z.string().min(3).optional(),
+    address: z.string().min(5).optional(),
+  }),
+  async ({ id, name, email, phone, imageURL, relationship, address }) => {
+    await Contact.findByIdAndUpdate(id, {
+      name,
+      email,
+      phone,
+      imageURL,
+      relationship,
+      address,
+    })
+
+    revalidatePath('/', 'page')
   }
 )

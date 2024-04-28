@@ -1,6 +1,6 @@
 'use client'
 
-import { createContact } from '@/action/contact'
+import { editContact, getContactById } from '@/action/contact'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -23,12 +23,10 @@ import {
 import { useAction } from 'next-safe-action/hooks'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-
-const TOAST_ID = 'create-contact'
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -39,8 +37,24 @@ const formSchema = z.object({
   address: z.string().min(5),
 })
 
-export default function NewContact() {
+export default function EditContact({
+  params: { id },
+}: {
+  params: { id: string }
+}) {
   const router = useRouter()
+
+  const {
+    execute: runGetContact,
+    result: { data },
+    status: statusGetContact,
+  } = useAction(getContactById, {
+    onError: (error) => {
+      toast.error(
+        error.fetchError ?? error.serverError ?? 'Failed to load contact'
+      )
+    },
+  })
 
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
@@ -55,22 +69,22 @@ export default function NewContact() {
     },
   })
 
-  const { execute } = useAction(createContact, {
+  const { execute: runEditContact } = useAction(editContact, {
     onExecute: () => {
-      toast.loading('Creating contact...', {
+      toast.loading('Updating contact...', {
         duration: Infinity,
         dismissible: true,
-        id: TOAST_ID,
+        id,
       })
     },
     onError: (error) => {
       toast.error(
-        error.fetchError ?? error.serverError ?? 'Failed to create contact',
-        { duration: 4000, id: TOAST_ID }
+        error.fetchError ?? error.serverError ?? 'Failed to update contact',
+        { duration: 4000, id }
       )
     },
     onSuccess: () => {
-      toast.success('Contact created', { duration: 4000, id: TOAST_ID })
+      toast.success('Contact is updated', { duration: 4000, id })
       form.reset()
       router.push('/')
     },
@@ -78,10 +92,34 @@ export default function NewContact() {
 
   const onSubmit = useCallback(
     (values: z.infer<typeof formSchema>) => {
-      execute(values)
+      if (data) {
+        const newData = Object.fromEntries(
+          Object.entries(values).filter(
+            ([key]) =>
+              values[key as keyof typeof values] !==
+              data[key as keyof typeof values]
+          )
+        )
+
+        if (Object.entries(newData).length > 0)
+          runEditContact({ id, ...newData })
+      }
     },
-    [execute]
+    [runEditContact, data, id]
   )
+
+  useEffect(() => {
+    runGetContact({ id })
+  }, [runGetContact, id])
+
+  useEffect(() => {
+    form.resetField('name', { defaultValue: data?.name ?? '' })
+    form.resetField('email', { defaultValue: data?.email ?? '' })
+    form.resetField('phone', { defaultValue: data?.phone ?? '' })
+    form.resetField('imageURL', { defaultValue: data?.imageURL ?? '' })
+    form.resetField('relationship', { defaultValue: data?.relationship ?? '' })
+    form.resetField('address', { defaultValue: data?.address ?? '' })
+  }, [data, form])
 
   return (
     <section className="mx-auto p-8 sm:px-12 lg:px-16 lg:py-12">
@@ -91,12 +129,8 @@ export default function NewContact() {
       </Link>
 
       <h1 className="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-        Create a new contact
+        Edit contact
       </h1>
-
-      <p className="mt-4 leading-relaxed text-gray-500">
-        Fill in the form below to create a new contact
-      </p>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-3">
@@ -236,7 +270,12 @@ export default function NewContact() {
           />
           <Button
             type="submit"
-            disabled={form.formState.isSubmitting || !form.formState.isValid}
+            disabled={
+              statusGetContact !== 'hasSucceeded' ||
+              form.formState.isSubmitting ||
+              !form.formState.isValid ||
+              !form.formState.isDirty
+            }
           >
             Submit
           </Button>

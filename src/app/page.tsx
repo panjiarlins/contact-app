@@ -2,7 +2,7 @@ import { getContacts } from '@/action/contact'
 import ContactCard from '@/components/contact-card'
 import ContactCardPagination from '@/components/contact-card-pagination'
 
-export default async function RootPage({
+export default async function Home({
   searchParams,
 }: {
   searchParams: Record<string, string>
@@ -32,8 +32,9 @@ export default async function RootPage({
           </div>
         ) : (
           data.contacts.map((contact) => (
-            <div key={contact._id.toString()} className="[&>*]:w-full">
+            <div key={contact._id} className="[&>*]:w-full">
               <ContactCard
+                id={contact._id}
                 name={contact.name}
                 email={contact.email}
                 address={contact.address}
@@ -46,7 +47,9 @@ export default async function RootPage({
         )}
       </section>
 
-      {data && <ContactCardPagination searchParams={searchParams} {...data} />}
+      {!!data && (
+        <ContactCardPagination searchParams={searchParams} {...data} />
+      )}
     </main>
   )
 }

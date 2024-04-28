@@ -1,8 +1,18 @@
 import { EllipsisVertical, Home, Mail, Phone } from 'lucide-react'
 import { Button } from './ui/button'
 import Image from 'next/image'
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+} from './ui/menubar'
+import Link from 'next/link'
 
 export default function ContactCard({
+  id,
   name,
   email,
   phone,
@@ -10,6 +20,7 @@ export default function ContactCard({
   relationship,
   address,
 }: {
+  id: string
   name: string
   email: string
   phone: string
@@ -18,15 +29,23 @@ export default function ContactCard({
   address: string
 }) {
   return (
-    <div className="mx-auto flex size-fit h-[359px] w-[276px] flex-col justify-evenly overflow-hidden rounded-xl bg-background p-4 shadow-sm">
-      <div className="relative">
-        <Button
-          className="absolute right-0 top-0 z-10 size-8 rounded-full"
-          size="icon"
-          variant="ghost"
-        >
-          <EllipsisVertical className="size-6" />
-        </Button>
+    <div className="relative mx-auto flex size-fit h-[359px] w-[276px] flex-col justify-evenly overflow-hidden rounded-xl bg-background p-4 shadow-sm">
+      <Menubar className="absolute right-1 top-2 z-10 border-none bg-transparent">
+        <MenubarMenu>
+          <MenubarTrigger className="size-10 rounded-full">
+            <EllipsisVertical />
+          </MenubarTrigger>
+          <MenubarContent className="bg-secondary">
+            <Link href={`/edit-contact/${id}`}>
+              <MenubarItem>Edit</MenubarItem>
+            </Link>
+            <MenubarSeparator />
+            <MenubarItem>Delete</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
+
+      <div>
         <div className="relative mx-auto size-fit">
           <Image
             unoptimized
