@@ -8,7 +8,7 @@ import {
   PaginationPrevious,
 } from './ui/pagination'
 
-export default function ContactCardPagination({
+export default function PaginationCardContact({
   searchParams,
   page,
   totalPages,

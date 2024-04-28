@@ -1,6 +1,6 @@
 import { getContacts } from '@/action/contact'
-import ContactCard from '@/components/contact-card'
-import ContactCardPagination from '@/components/contact-card-pagination'
+import CardContact from '@/components/card-contact'
+import PaginationCardContact from '@/components/pagination-card-contact'
 
 export default async function Home({
   searchParams,
@@ -33,7 +33,7 @@ export default async function Home({
         ) : (
           data.contacts.map((contact) => (
             <div key={contact._id} className="[&>*]:w-full">
-              <ContactCard
+              <CardContact
                 id={contact._id}
                 name={contact.name}
                 email={contact.email}
@@ -48,7 +48,7 @@ export default async function Home({
       </section>
 
       {!!data && (
-        <ContactCardPagination searchParams={searchParams} {...data} />
+        <PaginationCardContact searchParams={searchParams} {...data} />
       )}
     </main>
   )

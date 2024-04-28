@@ -56,6 +56,8 @@ export const getContacts = action(
     const contacts = await Contact.find<ContactType>(searchQuery)
       .limit(limit)
       .skip(skip)
+      .sort({ name: 1 })
+      .collation({ locale: 'en', strength: 2 })
 
     const totalContacts = await Contact.countDocuments(searchQuery)
 
@@ -91,14 +93,19 @@ export const editContact = action(
     address: z.string().min(5).optional(),
   }),
   async ({ id, name, email, phone, imageURL, relationship, address }) => {
-    await Contact.findByIdAndUpdate(id, {
-      name,
-      email,
-      phone,
-      imageURL,
-      relationship,
-      address,
-    })
+    await Contact.updateOne(
+      { _id: id },
+      { $set: { name, email, phone, imageURL, relationship, address } }
+    )
+
+    revalidatePath('/', 'page')
+  }
+)
+
+export const deleteContact = action(
+  z.object({ id: z.string() }),
+  async ({ id }) => {
+    await Contact.deleteOne({ _id: id })
 
     revalidatePath('/', 'page')
   }

@@ -1,17 +1,11 @@
-import { EllipsisVertical, Home, Mail, Phone } from 'lucide-react'
+'use client'
+
+import { Home, Mail, Phone } from 'lucide-react'
 import { Button } from './ui/button'
 import Image from 'next/image'
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarTrigger,
-} from './ui/menubar'
-import Link from 'next/link'
+import MenuCardContact from './menu-card-contact'
 
-export default function ContactCard({
+export default function CardContact({
   id,
   name,
   email,
@@ -30,42 +24,27 @@ export default function ContactCard({
 }) {
   return (
     <div className="relative mx-auto flex size-fit h-[359px] w-[276px] flex-col justify-evenly overflow-hidden rounded-xl bg-background p-4 shadow-sm">
-      <Menubar className="absolute right-1 top-2 z-10 border-none bg-transparent">
-        <MenubarMenu>
-          <MenubarTrigger className="size-10 rounded-full">
-            <EllipsisVertical />
-          </MenubarTrigger>
-          <MenubarContent className="bg-secondary">
-            <Link href={`/edit-contact/${id}`}>
-              <MenubarItem>Edit</MenubarItem>
-            </Link>
-            <MenubarSeparator />
-            <MenubarItem>Delete</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
+      <MenuCardContact id={id} />
 
-      <div>
-        <div className="relative mx-auto size-fit">
-          <Image
-            unoptimized
-            priority
-            src={imageURL}
-            alt={`Photo of ${name}`}
-            width={105}
-            height={105}
-            className="rounded-3xl border-4 border-white"
-          />
-          <Image
-            unoptimized
-            priority
-            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`}
-            alt={`Avatar of ${name}`}
-            width={42}
-            height={42}
-            className="absolute -right-[24px] bottom-0 mx-auto rounded-2xl border border-white"
-          />
-        </div>
+      <div className="relative mx-auto size-fit">
+        <Image
+          unoptimized
+          priority
+          src={imageURL}
+          alt={`Photo of ${name}`}
+          width={105}
+          height={105}
+          className="rounded-3xl border-4 border-white"
+        />
+        <Image
+          unoptimized
+          priority
+          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`}
+          alt={`Avatar of ${name}`}
+          width={42}
+          height={42}
+          className="absolute -right-[24px] bottom-0 mx-auto rounded-2xl border border-white"
+        />
       </div>
 
       <div className="text-center">
